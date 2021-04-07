@@ -3,4 +3,14 @@
 machine learning pattern classfication class SS2021
 
 - prediction of valence and arousal
-- this repo does not contain the dataset (_pls download it from moodle_)
+
+
+
+## task 2
+- how reliable / consistent are emotion annotations, how strongly do they agree / disagree? 
+- how is the agreement connected to major or minor features?
+- how would you deive discrete quadrant-based classes from the raw annotatins?
+- how would you deal with outliers in the annotations?
+- how are the features distributed? 
+- are there pairs of features that are correlated, or features that seem like they will be obviously useful?
+
