@@ -1,4 +1,4 @@
-#use as GetCViterable().iterable("dataset/phase_3_TRAIN_7d499bff69ca69b6_6372c3e_MLPC2021_generic.csv")
+#use as GetCViterable().iterable()
 
 import numpy as np
 import pandas as pd
@@ -10,7 +10,7 @@ from sklearn.model_selection import PredefinedSplit
 
 
 class GetCViterable():
-    def iterable(self,path):
+    def iterable(self,path="dataset/phase_3_TRAIN_7d499bff69ca69b6_6372c3e_MLPC2021_generic.csv", pianist_folds=3,pieces_folds=5,doPianists=True,doPieces=True):
         df = pd.read_csv(path)
 
         #create tags_dataframe:
@@ -38,7 +38,7 @@ class GetCViterable():
 
         #choose random pianists
         pianist_cv=[]
-        number_folds=3
+        number_folds=pianist_folds
 
         #initialize pianists_cv:
         for i in range(number_folds):
@@ -82,7 +82,7 @@ class GetCViterable():
 
         # chose random pieces using above subset technique:
         piece_cv=[]
-        number_folds=5
+        number_folds=pieces_folds
         #initialize piece_cv:
         for i in range(number_folds):
             piece_cv.append([])
@@ -103,35 +103,38 @@ class GetCViterable():
 
         #create vertical splits:
         myCViterator = []
-        for f,fold in enumerate(pianist_cv):
-            vetrical_mask_train=np.zeros(0).astype(int)
-            vetrical_mask_test=np.zeros(0).astype(int)
-            for i in range(len(fold)):
-                mask= X_tags[X_tags['Pianist']!=pianist_cv[f][i]].index.values.astype(int)
-                vetrical_mask_train=np.concatenate((vetrical_mask_train,mask), axis=0)
 
-                mask= X_tags[X_tags['Pianist']==pianist_cv[f][i]].index.values.astype(int)
-                vetrical_mask_test=np.concatenate((vetrical_mask_test,mask), axis=0)
-            #print(vetrical_mask_test)
-            print(vetrical_mask_train)
-            trainIndices=vetrical_mask_train
-            testIndices=vetrical_mask_test
-            myCViterator.append((trainIndices, testIndices))
+        if(doPianists):
+            for f,fold in enumerate(pianist_cv):
+                vetrical_mask_train=np.zeros(0).astype(int)
+                vetrical_mask_test=np.zeros(0).astype(int)
+                for i in range(len(fold)):
+                    mask= X_tags[X_tags['Pianist']!=pianist_cv[f][i]].index.values.astype(int)
+                    vetrical_mask_train=np.concatenate((vetrical_mask_train,mask), axis=0)
 
-        #and create horizontal splits:
-        for f,fold in enumerate(piece_cv):
-            vetrical_mask_train=np.zeros(0).astype(int)
-            vetrical_mask_test=np.zeros(0).astype(int)
-            for i in range(len(fold)):
-                mask= X_tags[X_tags['Piece_id']!=piece_cv[f][i]].index.values.astype(int)
-                vetrical_mask_train=np.concatenate((vetrical_mask_train,mask), axis=0)
+                    mask= X_tags[X_tags['Pianist']==pianist_cv[f][i]].index.values.astype(int)
+                    vetrical_mask_test=np.concatenate((vetrical_mask_test,mask), axis=0)
+                #print(vetrical_mask_test)
+                #print(vetrical_mask_train)
+                trainIndices=vetrical_mask_train
+                testIndices=vetrical_mask_test
+                myCViterator.append((trainIndices, testIndices))
 
-                mask= X_tags[X_tags['Piece_id']==piece_cv[f][i]].index.values.astype(int)
-                vetrical_mask_test=np.concatenate((vetrical_mask_test,mask), axis=0)
-            #print(vetrical_mask_test)
-            #print(vetrical_mask_train)
-            trainIndices=vetrical_mask_train
-            testIndices=vetrical_mask_test
-            myCViterator.append((trainIndices, testIndices))
+        if (doPieces):
+            #and create horizontal splits:
+            for f,fold in enumerate(piece_cv):
+                vetrical_mask_train=np.zeros(0).astype(int)
+                vetrical_mask_test=np.zeros(0).astype(int)
+                for i in range(len(fold)):
+                    mask= X_tags[X_tags['Piece_id']!=piece_cv[f][i]].index.values.astype(int)
+                    vetrical_mask_train=np.concatenate((vetrical_mask_train,mask), axis=0)
+
+                    mask= X_tags[X_tags['Piece_id']==piece_cv[f][i]].index.values.astype(int)
+                    vetrical_mask_test=np.concatenate((vetrical_mask_test,mask), axis=0)
+                #print(vetrical_mask_test)
+                #print(vetrical_mask_train)
+                trainIndices=vetrical_mask_train
+                testIndices=vetrical_mask_test
+                myCViterator.append((trainIndices, testIndices))
 
         return myCViterator
