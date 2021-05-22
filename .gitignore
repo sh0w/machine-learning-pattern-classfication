@@ -128,3 +128,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 .DS_Store
+
+#Datasets
+phase_4_TRAIN_22d5ff80542b443e_e2a955e_MLPC2021_melspect.h5
+phase_4_CHALLENGE_abaa1959613fe3aa_e2a955e_MLPC2021_melspect.h5
